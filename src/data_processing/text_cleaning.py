@@ -126,3 +126,11 @@ def vectorize(dataframe, token_col):
     dataframe["Vectors"] = dataframe[token_col].apply(vectorize_tokens) # Vectorize tokens and add to Vectors column
     
     return dataframe
+
+def get_model_data(dataframe, cols):
+    """
+    Drops all columns that are not specified in the cols array and returns the DataFrame.
+    """
+    new_dataframe = dataframe[cols]
+    
+    return new_dataframe
