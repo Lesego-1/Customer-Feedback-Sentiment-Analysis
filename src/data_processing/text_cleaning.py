@@ -2,10 +2,11 @@ import pandas as pd
 import re
 from langdetect import detect, DetectorFactory
 import spacy
+from textblob import TextBlob
 
 # Filter only English Reviews
 
-DetectorFactory.seed = 0 # Ensure consistent results
+DetectorFactory.seed = 0 # Ensure consistent results for langauge classification
 
 def is_english(text):
     # Checks if a text is English or not. Returns True if it is English, False if otherwise.
@@ -134,3 +135,26 @@ def get_model_data(dataframe, cols):
     new_dataframe = dataframe[cols]
     
     return new_dataframe
+
+def get_sentiment(tokens):
+    # Classifies the sentiment of a text into positive, negative or neutral
+    token_text = " ".join(tokens) # Create a text version of the tokens
+    
+    sentiment = TextBlob(token_text).sentiment.polarity # Get polarity of the text
+    if sentiment > 0: # Positvie sentiment
+        return 1
+    elif sentiment < 0: # Negative sentiment
+        return -1
+    else: # Neutral sentiment
+        return 0
+    
+
+def classify_sentiment(dataframe, token_col):
+    """
+    If the DataFrame does not contain a sentiment column, this function will be applied to classify the sentiment of the text.
+    Uses a pre-trained model to get the sentiment of the text and returns the sentiment.
+    Returns the dataframe
+    """
+    dataframe["sentiment"] = dataframe[token_col].apply(get_sentiment) # Classify sentiment of tokens and insert into column
+    
+    return dataframe
