@@ -106,7 +106,7 @@ def lemmatize_tokens(dataframe, token_col):
     return dataframe
 
 # Vectorization
-def vectorize_tokens(tokens):
+def vectorize(tokens):
     # Vectorizes the array of tokens and returns the array of vectors.
     nlp = spacy.load("en_core_web_lg") # Create NLP Pipeline
     
@@ -117,14 +117,14 @@ def vectorize_tokens(tokens):
     
     return vectorized_tokens
     
-def vectorize(dataframe, token_col):
+def vectorize_tokens(dataframe, token_col):
     """
     Takes tokens and provides a new column containing their vectors. 
     Returns the DataFrame.
     """
     nlp = spacy.load("en_core_web_lg") # Create NLP Pipeline
     
-    dataframe["Vectors"] = dataframe[token_col].apply(vectorize_tokens) # Vectorize tokens and add to Vectors column
+    dataframe["Vectors"] = dataframe[token_col].apply(vectorize) # Vectorize tokens and add to Vectors column
     
     return dataframe
 
@@ -136,18 +136,12 @@ def get_model_data(dataframe, cols):
     
     return new_dataframe
 
-def get_sentiment(tokens):
-    # Classifies the sentiment of a text into positive, negative or neutral
-    token_text = " ".join(tokens) # Create a text version of the tokens
-    
-    sentiment = TextBlob(token_text).sentiment.polarity # Get polarity of the text
-    if sentiment > 0: # Positvie sentiment
+def get_sentiment(review):
+    # Classifies the sentiment of a text into positive, negative or neutral using the review ratings
+    if review >= 2.5:
         return 1
-    elif sentiment < 0: # Negative sentiment
-        return -1
-    else: # Neutral sentiment
+    else:
         return 0
-    
 
 def classify_sentiment(dataframe, token_col):
     """
