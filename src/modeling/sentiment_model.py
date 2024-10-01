@@ -1,6 +1,7 @@
 from sklearn.model_selection import train_test_split
 from sklearn.linear_model import LogisticRegression
 from sklearn.naive_bayes import MultinomialNB
+from sklearn.preprocessing import MinMaxScaler
 from sklearn.ensemble import RandomForestClassifier
 from keras.models import  Sequential
 from keras.layers import LSTM, Dense, Dropout
@@ -26,6 +27,11 @@ def logistic_regression_model(X_train, X_test, y_train):
 
 def naive_bayes_model(X_train, X_test, y_train):
     # Fits train data into model and returns predicted values.
+    scaler = MinMaxScaler() # Initialize scaler
+    # Normalize the train and test data
+    X_train = scaler.fit_transform(X_train)
+    X_test = scaler.transform(X_test)
+    
     model = MultinomialNB() # Intialize model
     model.fit(X_train, y_train) # Fit train data into model
     
