@@ -143,12 +143,12 @@ def get_sentiment(review):
     else:
         return 0
 
-def classify_sentiment(dataframe, token_col):
+def classify_sentiment(dataframe, review_col):
     """
-    If the DataFrame does not contain a sentiment column, this function will be applied to classify the sentiment of the text.
-    Uses a pre-trained model to get the sentiment of the text and returns the sentiment.
+    Takes the review and classifies a positive or negative sentiment.
+    Inserts the sentiment in a new column.
     Returns the dataframe
     """
-    dataframe["sentiment"] = dataframe[token_col].apply(get_sentiment) # Classify sentiment of tokens and insert into column
+    dataframe["sentiment"] = dataframe[review_col].apply(get_sentiment) # Classify sentiment of tokens and insert into column
     
     return dataframe
