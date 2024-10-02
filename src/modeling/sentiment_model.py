@@ -17,15 +17,6 @@ def split_data(X, y):
     
     return X_train, X_test, y_train, y_test
 
-# def logistic_regression_model(X_train, X_test, y_train):
-#     # Fits train data into logistic regression model and returns the predicted test values.
-#     model = LogisticRegression(random_state=42) # Initialize model
-#     model.fit(X_train, y_train) # Fit train data into model
-    
-#     y_pred = model.predict(X_test) # Classify text
-    
-#     return y_pred
-
 def naive_bayes_model(X_train, X_test, y_train):
     # Fits train data into model and returns predicted values.
     scaler = MinMaxScaler() # Initialize scaler
@@ -39,15 +30,6 @@ def naive_bayes_model(X_train, X_test, y_train):
     y_pred = model.predict(X_test) # Classify text
     
     return y_pred
-
-# def random_forest_model(X_train, X_test, y_train):
-#     # Fits train data into model and returns predicted y values.
-#     model = RandomForestClassifier(random_state=42) # Initialize model
-#     model.fit(X_train, y_train) # Fit train data into model
-    
-#     y_pred = model.predict(X_test) # Classify text
-    
-#     return y_pred
 
 def lstm_model(X_train, X_test, y_train, y_test):
     """
@@ -78,6 +60,6 @@ def lstm_model(X_train, X_test, y_train, y_test):
     model.fit(X_train_padded, y_train, epochs=2, batch_size=64, validation_data=(X_test_padded, y_test)) # Fit the model
     
     y_pred_prob = model.predict(X_test_padded) # Predict probability of positive classification
-    y_pred = [pred >= 0.5 for pred in y_pred_prob] # Get a list of the classified values
+    y_pred = [int(pred >= 0.5) for pred in y_pred_prob] # Get a list of the classified values
     
     return y_pred
