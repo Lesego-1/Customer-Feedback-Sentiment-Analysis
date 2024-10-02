@@ -53,10 +53,13 @@ def lstm_model(X_train, X_test, y_train, y_test):
     """
     Creates an LSTM model and returns the predicted y values.
     Makes use of padding to ensure that the sequences are of equal length.
+    Returns the predicted classifications of the values.
     """
     # Ensure train and test data are numpy arrays
     X_train = np.array(X_train)
     X_test = np.array(X_test)
+    
+    
     
     max_sequence_length = 20 # Define max length for padding
     # Pad the sequences of train and test data
@@ -74,7 +77,7 @@ def lstm_model(X_train, X_test, y_train, y_test):
     model.compile(optimizer="adam", loss='binary_crossentropy', metrics=['accuracy']) # Compile model
     model.fit(X_train_padded, y_train, epochs=2, batch_size=64, validation_data=(X_test_padded, y_test)) # Fit the model
     
-    y_pred_prob = model.predict(X_test) # Predict probability of positive classification
-    y_pred = int((y_pred_prob >= 0.5)) # Get actual classification
+    y_pred_prob = model.predict(X_test_padded) # Predict probability of positive classification
+    y_pred = [pred >= 0.5 for pred in y_pred_prob] # Get a list of the classified values
     
     return y_pred
