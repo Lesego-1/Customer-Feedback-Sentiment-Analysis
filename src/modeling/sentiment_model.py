@@ -41,8 +41,6 @@ def lstm_model(X_train, X_test, y_train, y_test):
     X_train = np.array(X_train)
     X_test = np.array(X_test)
     
-    
-    
     max_sequence_length = 20 # Define max length for padding
     # Pad the sequences of train and test data
     X_train_padded = pad_sequences(X_train, maxlen=max_sequence_length, padding="post", truncating="post", value=0.0)
