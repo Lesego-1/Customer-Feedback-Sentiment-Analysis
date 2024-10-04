@@ -34,61 +34,35 @@ def absa_model(text):
     """
     Takes in text and determines the text's aspects and the opinions associated with the aspects.
     Uses a list of words and sentiment polarity to classify the sentiment of the opinion.
-    Determines opions if they are adjectives or adverbs to the parent token (noun).
-    Returns the aspects, opinions and their sentiments.
+    Aspects are determined as noun chunks.
+    Opinions are determined as adjectives or adverbs.
+    Returns a list with a tuple that contains the aspect, opinion and sentiment of the opinion.
     """
     # Define positive and negative words
     positive_words = ["amazing", "good", "great", "excellent", "fantastic", "positive", "happy"]
     negative_words = ["poor", "bad", "terrible", "horrible", "negative", "unhappy", "disappointing"]
     
     doc = nlp(text) # Process the text
-    
     # Initialize lists for results
     aspects, opinions, sentiments = [], [], []
     
-    # Iterate through tokens to find aspects (nouns) and opinions (adjectives)
-    for token in doc:
-        if token.pos_ == "NOUN":
-            # Look for adjectives related to the aspect
-            for child in token.children: # Loop through all dependants of the token
-                if child.dep_ == "amod" and child.pos_ == "ADJ": # If child is an adjective
-                    # Define aspect and its correlated opinion
-                    aspect = token
-                    opinion = child
-                    # Add aspect and opinion to the lists
-                    aspects.append(aspect)
-                    opinions.append(opinion)
-                    
-                    # Determine sentiment
-                    if opinion in positive_words:
-                        sentiment = "positive"
-                    elif opinion in negative_words:
-                        sentiment = "negative"
-                    else: # Use textblob for polarity
-                        sentiment = "positive" if TextBlob(opinion).sentiment.polarity >= 0 else "negative"
-                    
-                    sentiments.append(sentiment) # Add sentiment to the list
-                    
-    # Iterate through tokens to find aspects (nouns) and opinions (adverbs)
-    for token in doc:
-        if token.pos_ == "NOUN":
-            # Look for adverbs related to the aspect
-            for child in token.children: # Loop through all dependants of the token
-                if child.dep_ == "advmod" and child.pos_ == "ADV": # If child is an adverb
-                    aspect = token
-                    opinion = child
-                    
-                    aspects.append(aspect)
-                    opinions.append(opinion)
-                    
-                    # Determine Sentiment
-                    if opinion in positive_words:
-                        sentiment = "positive"
-                    elif opinion in negative_words:
-                        sentiment = "negative"
-                    else:
-                        sentiment = "postive" if TextBlob(opinion).sentiment.polarity >= 0 else "negative"
-                        
-                    sentiments.append(sentiment)
+    # Get aspects by taking the noun chunks
+    for chunk in doc.noun_chunks:
+        aspect = chunk
+        aspects.append(aspect)
+        
+    # Generate opinions by getting adjectives or adverbs
+    opinions = [token.text for token in doc if token.pos_ in ["ADJ", "ADV"]]
     
-    return list(zip(aspects, opinions, sentiments))
+    # Get Sentiment of each opinion
+    for opinion in opinions:
+        if opinion in positive_words:
+            sentiment = "positive"
+        elif opinion in negative_words:
+            sentiment = "negative"
+        else: # Use textblob for polarity
+            sentiment = "positive" if TextBlob(opinion).sentiment.polarity >= 0 else "negative"
+        
+        sentiments.append(sentiment) # Add sentiment to the list
+    
+    print(list(zip(aspects, opinions, sentiments)))
