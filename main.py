@@ -1,5 +1,6 @@
 from src.data_processing.data_loader import load_dataframe
 from src.data_processing.text_cleaning import filter_english, clean_text, tokenize_words, remove_stop_words, lemmatize_tokens, vectorize_tokens, get_model_data, classify_sentiment
+from src.modeling.summarization_model import summarize_text
 from src.modeling.sentiment_model import split_data, naive_bayes_model, lstm_model
 from src.modeling.absa_model import absa_model
 import numpy as np
@@ -43,7 +44,10 @@ from sklearn.metrics import accuracy_score
 # print(f"LSTM Model Accuracy Score: {lstm_accuracy}")
 
 # Aspect Based Sentiment Analysis
-text = "The battery life is amazing but the screen quality is poor." # Example text
-absa_model_results = absa_model(text)
-# Print absa results
+# absa_text = "The battery life is amazing but the screen quality is poor." # Example text
+# absa_model_results = absa_model(absa_text) # Get absa result
 # print(f"ABSA Model Results: {absa_model_results}")
+
+# Summarization Model
+text = """Natural Language Processing (NLP) is a field of artificial intelligence that focuses on the interaction between computers and humans through natural language."""
+print(summarize_text(text))

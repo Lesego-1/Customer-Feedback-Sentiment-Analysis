@@ -65,4 +65,4 @@ def absa_model(text):
         
         sentiments.append(sentiment) # Add sentiment to the list
     
-    print(list(zip(aspects, opinions, sentiments)))
+    return list(zip(aspects, opinions, sentiments))
